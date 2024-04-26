@@ -1,4 +1,3 @@
-
 c
 c     RTP Fortran API structures and parameters
 c     Version 2.01
@@ -145,6 +144,9 @@ c
           real*4     plevs(MAXLEV)        ! pressure levels
           real*4     palts(MAXLEV)        ! level altitudes
           real*4     ptemp(MAXLEV)        ! temperature profile
+c          real*4     cc(MAXLEV)           ! cloud cover
+c          real*4     ciwc(MAXLEV)         ! cloud ice water content
+c          real*4     clwc(MAXLEV)         ! cloud liq water content	  
           real*4     gamnt(MAXLEV,MAXGAS) ! gas amounts
           real*4     gtotal(MAXGAS)       ! total column gas amount
           real*4     gxover(MAXGAS)       ! gas crossover press

@@ -1,7 +1,7 @@
 #
 # RTP library makefile
 #
-# this makefile builds the library librtp.a for the RTP C and 
+# this makefile builds the library librtp90.a for the RTP C and 
 # Fortran application interfaces
 #
 # the site-specific parameters HDFHOME, RTPHOME, and the C and 
@@ -48,7 +48,7 @@ RTPLIB  = -L$(RTPHOME)/lib -lrtp	# RTP C and F77 library
 # make targets
 # -------------
 
-all: prep librtp.a install
+all: prep librtp90.a install
 
 prep:
 	cp -p ../include/rtp.h .
@@ -78,7 +78,11 @@ RTPOBS = rtpwrite1.o rtpwrite2.o rtpread1.o rtpread2.o getchan.o \
 		rtpclose1.o gsplit.o rtphcheck.o headinit.o profinit.o \
 		fmatch.o hsize.o
 
-$(RTPOBS) : $(RTPSRC) rtp.h pvdefs.h
+MRTPOBS = rtpwrite1.mod rtpwrite2.mod rtpread1.mod rtpread2.mod getchan.mod \
+		rtpclose1.mod gsplit.mod rtphcheck.mod headinit.mod profinit.mod \
+		fmatch.mod hsize.mod
+
+$(MRTPBOBS) $(RTPOBS): $(RTPSRC) rtp.h pvdefs.h
 	$(CC) $(CFLAGS) -c $(RTPSRC) $(HDFINC1)
 
 # -----------------------
@@ -108,20 +112,20 @@ $(FOROBS): $(FORSRC) rtp.h pvdefs.h
 # RTP library
 # -----------
 
-librtp.a: $(PVOBS) $(RTPOBS) $(FOROBS) $(TSTOBS)
-	ar -rcs librtp.a $(PVOBS) $(RTPOBS) $(FOROBS) $(TSTOBS)
+librtp90.a: $(PVOBS) $(RTPOBS) $(FOROBS) $(TSTOBS)
+	ar -rcs librtp90.a $(PVOBS) $(RTPOBS) $(FOROBS) $(TSTOBS)
 
 # -------
 # install
 # -------
 
-install:librtp.a
-	cp -a librtp.a $(RTPHOME)/lib
+install:librtp90.a
+	cp -a librtp90.a $(RTPHOME)/lib
 
 # -------
 # cleanup
 # -------
 
 clean:
-	rm *.o librtp.a 2> /dev/null || true
+	rm *.o librtp90.a 2> /dev/null || true
 
