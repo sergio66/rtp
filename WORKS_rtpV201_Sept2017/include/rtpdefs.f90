@@ -1,0 +1,362 @@
+
+!
+!     RTP Fortran API structures and parameters
+!     Version 2.01
+!     The Fortran structures defined here, RTPHEAD, RTPPROF, and
+!     RTPATTR, must match the corresponding C structures rtp_head,
+!     rtp_prof, and rtpfatt, and the parameters set below must have
+!     the same values as the corresponding C #define parameters.
+!
+!     Note: total record size for header or profile records
+!     may not exceed 50 kB
+!
+!     See rtp.h and rtpspec.pdf for more information on the fields
+!     defined below.
+!
+
+! --------------
+! RTP parameters
+! --------------
+
+integer :: BAD  
+                            ! value to be used if no data
+                            ! levels-type profile flag
+integer :: LEVPRO  
+                            ! layers-type profile flag
+integer :: LAYPRO  
+                            ! AIRS layers-type profile flag
+
+integer :: AIRSLAY  
+                            ! Summed radiance bit flags
+integer :: PROFBIT  
+                            ! bit flag for calculated radiance
+integer :: IRCALCBIT  
+                            ! bit flag for observed radiance
+integer :: IROBSVBIT  
+                            ! max allowed value of PROFBIT
+
+integer :: PFIELDSMAX  
+                            ! max num of emissivity/rho points
+integer :: MAXEMIS  
+                            ! max number of gases
+integer :: MAXGAS  
+                            ! max gas ID value
+integer :: MAXGASID  
+                            ! max number of levels
+integer :: MAXLEV  
+                            ! max number of channels
+integer :: MAXCHAN  
+                            ! max profile comment string
+integer :: MAXPNOTE  
+                            ! max profile udef values
+integer :: MAXUDEF  
+                            ! max profile and header iudef values
+
+integer :: MAXIUDEF  
+                            ! max num of open RTP files
+integer :: MAXOPEN  
+                            ! max number of attributes
+integer :: MAXNATTR  
+                            ! max num of chars in field or vdata name
+integer :: MAXVNAME  
+                            ! max num of chars in attribute name
+integer :: MAXANAME  
+                            ! max num of chars in attribute text
+
+integer :: MAXATEXT  
+                            ! max cal flag bytes, ceil(MAXCHAN/4)*4
+integer :: MAXCALF  
+                            ! true max for pnote, ceil(MAXPNOTE/4)*4
+
+integer :: MAXPN4  
+        ! the following parameters must match the values set in rtp.h
+        !
+parameter (BAD = - 9999)  
+parameter (LEVPRO = 0)  
+parameter (LAYPRO = 1)  
+
+parameter (AIRSLAY = 2)  
+parameter (PROFBIT = 1)  
+parameter (IRCALCBIT = 2)  
+parameter (IROBSVBIT = 4)  
+
+parameter (PFIELDSMAX = 7)  
+parameter (MAXEMIS = 100)  
+parameter (MAXGAS = 16)  
+parameter (MAXGASID = 303)  
+parameter (MAXLEV = 120)  
+parameter (MAXCHAN = 4231)  
+parameter (MAXPNOTE = 80)  
+parameter (MAXUDEF = 20)  
+
+parameter (MAXIUDEF = 10)  
+parameter (MAXOPEN = 8)  
+
+parameter (MAXNATTR = 32)  
+parameter (MAXCALF = ( (MAXCHAN - 1) / 4 + 1) * 4)  
+
+parameter (MAXPN4 = ( (MAXPNOTE-1) / 4 + 1) * 4)  
+        ! the following parameters must match the values set in pvdefs.h
+        ! and also the field sizes in the RTPATTR structure, defined bel
+        !
+parameter (MAXVNAME = 64)  
+parameter (MAXANAME = 64)  
+
+
+parameter (MAXATEXT = 1024)  
+! --------------------
+! RTP header structure
+! --------------------
+!
+
+STRUCTURE / RTPHEAD /  
+          ! profile data
+                             ! profile type
+integer :: ptype		  
+                               ! profile field set
+integer :: pfields		  
+                             ! min plevs value
+real :: pmin		  
+                             ! max plevs value
+real :: pmax		  
+                             ! number of gases
+integer :: ngas		  
+                                    ! constituent gas list
+integer :: glist (MAXGAS) 	  
+                                    ! constituent gas units
+
+integer :: gunit (MAXGAS) 	  
+          ! radiance data
+                                         ! platform ID/code number
+integer :: pltfid  
+                                         ! instrument ID/code number
+integer :: instid  
+                             ! number of channels
+integer :: nchan		  
+                                     ! channel ID numbers
+integer :: ichan (MAXCHAN) 	  
+                                     ! channel center freq.
+real :: vchan (MAXCHAN) 	  
+                              ! chan set min freq, including wings
+real :: vcmin		  
+                              ! chan set max freq, including wings
+
+real :: vcmax		  
+          ! maxes for profile fields
+          ! these fields are not saved explicitly in the HDF file
+                             ! max number of emis/rho points
+integer :: memis		  
+                             ! max number of pressure level
+
+integer :: mlevs		  
+          ! user defined fields
+                                      ! user-defined integer array
+integer :: iudef (MAXIUDEF) 	  
+                                   ! user-defined integer
+
+integer :: itype	  
+
+
+END STRUCTURE  
+! ---------------------
+! RTP profile structure
+! ---------------------
+!
+
+STRUCTURE / RTPPROF /  
+          ! profile location/time
+                                          ! profile latitude
+real :: plat  
+                                          ! profile longitude
+real :: plon  
+                                          ! profile time
+
+real (8) :: ptime  
+          ! surface data
+                                          ! surface temperature
+real :: stemp  
+                                          ! surface altitude
+real :: salti  
+                                          ! surface pressure
+real :: spres  
+                                          ! land fraction
+real :: landfrac  
+                                          ! land type code
+integer :: landtype  
+                                          ! wind speed
+real :: wspeed  
+                                          ! number of emis. pts
+integer :: nemis  
+                                          ! emissivity freq's
+real :: efreq (MAXEMIS)  
+                                          ! surface emissivities
+real :: emis (MAXEMIS)  
+                                          ! surface reflectance
+
+real :: rho (MAXEMIS)  
+          ! atmospheric data
+                                          ! number of press levels
+integer :: nlevs  
+                                          ! pressure levels
+real :: plevs (MAXLEV)  
+                                          ! level altitudes
+real :: palts (MAXLEV)  
+                                          ! temperature profile
+real :: ptemp (MAXLEV)  
+!          real*4     cc(MAXLEV)           ! cloud cover
+!          real*4     ciwc(MAXLEV)         ! cloud ice water content
+!          real*4     clwc(MAXLEV)         ! cloud liq water content	
+                                          ! gas amounts
+real :: gamnt (MAXLEV, MAXGAS)  
+                                          ! total column gas amount
+real :: gtotal (MAXGAS)  
+                                          ! gas crossover press
+real :: gxover (MAXGAS)  
+                                          ! temperature crossover press
+real :: txover  
+                                          ! CO2 mixing ratio
+
+real :: co2ppm  
+          ! clear flag/code
+                                          ! clear flag/code
+
+integer :: clrflag  
+          ! cloud1 data
+                                          ! cloud type code
+integer :: ctype  
+                                          ! cloud fraction
+real :: cfrac  
+                                          ! cloud top emissivity
+real :: cemis (MAXEMIS)  
+                                          ! cloud top reflectivity
+real :: crho (MAXEMIS)  
+                                          ! cloud top pressure
+real :: cprtop  
+                                          ! cloud bottom pressure
+real :: cprbot  
+                                          ! cloud non-gas water
+real :: cngwat  
+                                          ! cloud particle size
+real :: cpsize  
+                                          ! cloud surface temperature
+
+real :: cstemp  
+          ! cloud2 data
+                                          ! cloud2 type code
+integer :: ctype2  
+                                          ! cloud2 fraction
+real :: cfrac2  
+                                          ! cloud2 top emissivity
+real :: cemis2 (MAXEMIS)  
+                                          ! cloud2 top reflectivity
+real :: crho2 (MAXEMIS)  
+                                          ! cloud2 top pressure
+real :: cprtop2  
+                                          ! cloud2 bottom pressure
+real :: cprbot2  
+                                          ! cloud2 non-gas water
+real :: cngwat2  
+                                          ! cloud2 particle size
+real :: cpsize2  
+                                          ! cloud2 surface temperature
+real :: cstemp2  
+                                          ! cloud1+2 fraction
+
+real :: cfrac12  
+          ! radiance orientation data
+                                          ! observation pressure
+real :: pobs  
+                                          ! observation height
+real :: zobs  
+                                          ! radiation direction
+integer :: upwell  
+                                          ! scan angle
+real :: scanang  
+                                          ! satellite zenith angle
+real :: satzen  
+                                          ! satellite azimuth angle
+
+real :: satazi  
+          ! sun info
+                                          ! sun zenith angle
+real :: solzen  
+                                          ! sun azimuth angle
+real :: solazi  
+                                          ! Earth-Sun distance
+real :: sundist  
+                                          ! glint distance or flag
+
+real :: glint  
+          ! observation location/time
+                                          ! radiance obs lat.
+real :: rlat  
+                                          ! radiance obs lon.
+real :: rlon  
+!         integer*4  rfill                ! align rtime on 8 byte bndry
+                                          ! radiance obs time
+
+real (8) :: rtime  
+          ! observation indices
+                               ! file (granule) index
+integer :: findex		  
+                               ! along-track index
+integer :: atrack		  
+                               ! cross-track index
+integer :: xtrack		  
+                                          ! field of view index
+
+integer :: ifov  
+          ! observed radiance data
+                                          ! obs radiance
+real :: robs1 (MAXCHAN)  
+                                          ! obs rad per chan calib/qual
+character (len=1) :: calflag (MAXCALF)  
+                                          ! obs rad overall quality flag
+integer :: robsqual  
+                                          ! frequency calibration
+
+real :: freqcal  
+          ! calculated radiance data
+                                          ! calc radiance
+
+real :: rcalc (MAXCHAN)  
+          ! user defined fields
+                                          ! profile annotation, size MAX
+character (len=80) :: pnote  
+                                     ! user-defined real array
+real :: udef (MAXUDEF) 	  
+                                       ! user-defined integer array
+integer :: iudef (MAXIUDEF) 	  
+                                          ! user0defined integer
+
+integer :: itype  
+
+
+END STRUCTURE  
+! -----------------------
+! RTP attribute structure
+! -----------------------
+!
+! fname is the name of the field the attribute is to be associated
+!       with, 'header' for a general header attribute, or 'profiles'
+!       for a general profile attribute.  Its size declaration should
+!       be the same as the parameter MAXVNAME.
+!
+! aname is the attribute name, e.g., 'units' for a field attribute,
+!       or 'TITLE', for a general header attribute.  Its size should
+!       also be the same as the parameter MAXANAME.
+!
+! atext is the attribute text, 'e.g., '48 Fitting Profiles' might be
+!       the atext of the header 'TITLE' attribute.  Its size should be
+!       the same as the parameter MAXATEXT.
+!
+
+STRUCTURE / RTPATTR /  
+                             ! associated field name
+character (len=64) :: fname	  
+                             ! attribute name
+character (len=64) :: aname	  
+                               ! attribute text
+
+character (len=1024) :: atext	  
+end STRUCTURE

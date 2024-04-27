@@ -44,8 +44,10 @@ RTPHOME = ..
 # CFLAGS = -g -64
 # CFLAGS = -g
 CFLAGS = -O 
-CC = icc    # F90 = ifort "icc does not adds underscores to symbols"
+CC = icc       # F90 = ifort "icc does not adds underscores to symbols"
 #CC = cc       # F90 = /asl/opt/absoft/absoft10.0/bin/af90
+#CC = /usr/ebuild/software/intel-compilers/2023.2.1/compiler/2023.2.1/linux/bin/intel64/icc
+#CC = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/icc
 
 # ------------------------
 # Fortran compiler options
@@ -86,11 +88,17 @@ F90 = ifort
 #FLAGS = -O3 -names uppercase -us
 FLAGS = -O -assume nounderscore
 
+# gfortran options
+#F90 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
+#FFLAGS = -O -fdec-structure
+
+########################################################################
+
 # pass the variables set above to the subdirectory makefiles
 #
 EXPORTS = HDFHOME="$(HDFHOME)" RTPHOME="$(RTPHOME)" \
 	CC="$(CC)" CFLAGS="$(CFLAGS)" CLIB="$(CLIB)" \
-	F90="$(F90)" FFLAGS="$(FFLAGS)" FLIB="$(FLIB)"
+	F77="$(F90)" FFLAGS="$(FFLAGS)" FLIB="$(FLIB)"
 
 # -------------
 # Make Targets

@@ -51,6 +51,9 @@ FLIB = -lU77
 #F77 = /asl/opt/absoft/absoft10.0/bin/af77
 F77 = ifort
 
+F77 = /usr/ebuild/software/GCCcore/13.2.0/bin/gfortran
+FFLAGS = -O -fdec-structure
+
 # -------------
 # Build Targets
 # -------------

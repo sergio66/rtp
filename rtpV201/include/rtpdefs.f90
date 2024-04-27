@@ -50,13 +50,13 @@ integer :: MAXPN4           ! true max for pnote, ceil(MAXPNOTE/4)*4
 parameter (BAD = - 9999)  
 parameter (LEVPRO = 0)  
 parameter (LAYPRO = 1)  
-
 parameter (AIRSLAY = 2)  
+
 parameter (PROFBIT = 1)  
 parameter (IRCALCBIT = 2)  
 parameter (IROBSVBIT = 4)  
-
 parameter (PFIELDSMAX = 7)  
+
 parameter (MAXEMIS = 100)  
 parameter (MAXGAS = 16)  
 parameter (MAXGASID = 303)  
@@ -82,9 +82,8 @@ parameter (MAXATEXT = 1024)
 ! --------------------
 ! RTP header structure
 ! --------------------
-!
 
-STRUCTURE / RTPHEAD /  
+STRUCTURE /RTPHEAD/
 
 ! profile data
 integer :: ptype	     ! profile type	  
@@ -111,8 +110,8 @@ integer :: memis	     ! max number of emis/rho points
 integer :: mlevs	     ! max number of pressure level
 
 ! user defined fields      
-integer :: iudef (MAXIUDEF)  ! user-defined integer array 
-integer :: itype	     ! user-defined integer
+!integer :: iudef (MAXIUDEF)  ! user-defined integer array 
+!integer :: itype	     ! user-defined integer
 
 END STRUCTURE  
 
@@ -120,12 +119,12 @@ END STRUCTURE
 ! RTP profile structure
 ! ---------------------
 
-STRUCTURE / RTPPROF /  
+STRUCTURE /RTPPROF/
 ! profile location/time
                                           
 real :: plat                              ! profile latitude
 real :: plon                              ! profile longitude
-real (8) :: ptime                         ! profile time
+real(8) :: ptime                          ! profile time
 
 ! surface data
 real :: stemp                             ! surface temperature
@@ -144,9 +143,9 @@ integer :: nlevs                          ! number of press levels
 real :: plevs (MAXLEV)                    ! pressure levels
 real :: palts (MAXLEV)                    ! level altitudes
 real :: ptemp (MAXLEV)                    ! temperature profile
-real :: cc(MAXLEV)                        ! cloud cover
-real :: ciwc(MAXLEV)                      ! cloud ice water content
-real :: clwc(MAXLEV)                      ! cloud liq water content	
+!real :: cc(MAXLEV)                        ! cloud cover
+!real :: ciwc(MAXLEV)                      ! cloud ice water content
+!real :: clwc(MAXLEV)                      ! cloud liq water content	
 real :: gamnt (MAXLEV, MAXGAS)            ! gas amounts
 real :: gtotal (MAXGAS)                   ! total column gas amount
 real :: gxover (MAXGAS)                   ! gas crossover press
@@ -197,7 +196,7 @@ real :: glint                             ! glint distance or flag
 real :: rlat                              ! radiance obs lat.
 real :: rlon                              ! radiance obs lon.
 !integer*4  rfill                         ! align rtime on 8 byte bndry
-real (8) :: rtime                         ! radiance obs time
+real(8) :: rtime                          ! radiance obs time
 
 ! observation indices                               
 integer :: findex	               ! file (granule) index	                                
@@ -207,7 +206,6 @@ integer :: ifov                        ! field of view index
 
 ! observed radiance data                                          
 real :: robs1 (MAXCHAN)                ! obs radiance
-                                       
 character (len=1) :: calflag (MAXCALF) ! obs rad per chan calib/qual                                           
 integer :: robsqual                    ! obs rad overall quality flag
 real :: freqcal                        ! frequency calibration
@@ -221,8 +219,8 @@ real :: udef (MAXUDEF) 	               ! user-defined real array
 integer :: iudef (MAXIUDEF) 	       ! user-defined integer array
 integer :: itype                       ! user-defined integer
 
-
 END STRUCTURE  
+
 ! -----------------------
 ! RTP attribute structure
 ! -----------------------
@@ -241,9 +239,8 @@ END STRUCTURE
 !       the same as the parameter MAXATEXT.
 !
 
-STRUCTURE / RTPATTR /  
-
+STRUCTURE /RTPATTR/
 character (len=64) :: fname    ! associated field name
 character (len=64) :: aname    ! attribute name	  	  
 character (len=1024) :: atext  ! attribute text	  
-end STRUCTURE
+END STRUCTURE
