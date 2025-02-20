@@ -1,0 +1,71 @@
+ 1003  20/05/24 21:47:48 mkdir rtpV201_motteler1
+ 1004  20/05/24 21:47:52 cd rtpV201_motteler1
+ 1005  20/05/24 21:47:57 xnw Readme
+ 1006  20/05/24 21:50:05 ls -lt /home/motteler/shome/rtp
+ 1007  20/05/24 21:50:32 cp -aR  /home/motteler/shome/rtp .
+ 1009  20/05/24 21:51:14 ls /home/motteler/shome/rtp_serg2/make_sergioF90
+ 1010  20/05/24 21:51:18 ls /home/motteler/shome/rtp_serg2
+ 1011  20/05/24 21:51:34 mkdir exampleF90
+ 1012  20/05/24 21:51:47 cp -a /home/motteler/shome/rtp_serg2/* exampleF90
+
+/home/motteler/shome/rtp
+
+motteler : 
+I think the rtp updates are mostly done, except for a few more tests.
+The updated package is at github as motteler/rtp, and locally at
+/home/motteler/shome/rtp, for now.  The only changes the user should
+see are four added cloud fields and a Fortran include file that works
+with F90.  Other changes include updated paths and Makefiles, and a
+refactored rtp.h.  Adding the new fields (which included three arrays)
+required mods to rtp.h, rtpdef.h, rtpdefs.f, profinit.c, and
+rtpwrite1.c, the latter to trim the writes to p.mlevs.  In the end,
+most of the problems we ran into were with our tests, rather than the
+repo itself. (edited)
+
+Note that there are no substantive changes in the RTP libs, that is,
+no changes in the way things work.  The new libs should read old data,
+and the old libs should read new data, except that they won't see the
+new fields.  (The Matlab interface will see whatever is in an RTP
+file.)  Most of the code is still from 2002.  I still need to do some
+more tests, some cleanup, update the docs, and assign a proper version
+number with git tags.  There is an example of linking an F90 test
+program in /home/motteler/shome/rtp_serg2/make_sergioF90 (not a real
+Makefile) that compiles an F90 program and links to the new libs.  The
+test program is Sergio's makeRTPfile.f90.
+
+
+sergio :
+Great thanks, I'll look at it later, So basically the program was
+correct but the lib (built with omy modifications to rtpdefs.h) was
+incorrect?
+
+
+motteler :
+yes, though I think earlier we'd both forgotten to update p.mlevs, for
+some of the tests.  I think makeRTPfile.f90 is OK, at least the
+results look plausible to me.  Adding new fields that were arrays was
+a bit more involved than I'd expected.
+
+
+sergio : 
+Oh? I guess when i did it, I thought all I'd need to do was add
+cc(MAXLEVS) etc into rtpdefs.h (and then do things like change "c: to
+"!" for the comments) and then recompile the lib -- so it's more
+complicated that that? DId you have to also change the C code?
+(edited)
+
+
+motteler : 
+yes, see my comments above at 1:14 PM.  The changes are minor, but
+reviewing the code takes a while.  The RTP interface is complicated
+because you are matching a fixed record struct for the C and Fortran
+users with the dynamic HDF4 "Vdatas".  So we have to trim everything
+in the struct (or at least the arrays) to be no bigger than we
+actually want.
+
+That's why if you read the output from the C/Fortran interface with
+Matlab, you will often see a bunch of scalar fields with "undefined"
+values, for anything that wan't assigned to the struc, for a write.  I
+trim the arrays to actual sizes, but not all the unassigned scalars.
+That wastes a small amount of space, but nothing like if we didn't
+trim the arrays. (edited)

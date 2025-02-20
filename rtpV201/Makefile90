@@ -1,5 +1,5 @@
 #
-# RTP top level Makefile for rtpV201
+# RTP top level Makefile for rtpV201, f90
 #
 # this file sets some common parameters and then calls makefiles
 # in the src, test, and utils subdirectories

@@ -79,7 +79,6 @@ c --------------
         parameter ( MAXANAME  =   64 )
         parameter ( MAXATEXT  =  1024 )
 
-
 c --------------------
 c RTP header structure
 c --------------------
@@ -218,7 +217,7 @@ C         integer*4  rfill                ! align rtime on 8 byte bndry
           character*80  pnote             ! profile annotation, size MAXPN4
           real*4     udef(MAXUDEF)	  ! user-defined real array
           integer*4  iudef(MAXIUDEF)	  ! user-defined integer array
-          integer*4  itype                ! user0defined integer
+          integer*4  itype                ! user-defined integer
 
         END STRUCTURE
 

@@ -1,0 +1,37 @@
+
+rtp file sizes that worked:
+
+(1) 40000 profiles, 5000 channels (both robs1 and rcalc),
+    80 levels, 6 gases
+
+(2) 36000 profiles, 5000 channels (both robs1 and rcalc),
+    102 levels, and 16 gases.
+
+For both cases, the result is close to a 2 Gbyte file.  Trying some
+other combinations, and dropping the number of profiles to stay
+below the 2Gb limit, 6000 channels seems to work OK, with both robs1
+and rcalc.  Dropping rcalc, I can get 8000 channels, but not 8500,
+which I think we'd need for IASI.
+
+These tests are done by setting header fields mlevs, memis, nchan,
+ngas, glist, and ptype.  These need to be less than MAX limits set
+in rtp.h and rtpdefs.f.
+
+There are HDF 4 file, field, and Vdata record size limits set in the
+hdf libs include file hlimits.h:
+
+  #define VDATA_BUFFER_MAX 1000000
+  #define MAX_FIELD_SIZE     65535
+
+It's not clear that I'm hitting either of these.  The radiance
+fields with lots of channels are the closest, but that doesn't
+explain why dropping rcalc lets me fit in more obs, that seems more
+like an overall Vdata record limit.
+
+The test function rtpsize will do some sanity checks on field sets,
+and sizes.  This should be run after any modification of parameters
+or fields.
+
+
+￼
+￼

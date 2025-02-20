@@ -1,0 +1,16 @@
+
+# module load HDF/4.2.14-GCCcore-8.3.0
+
+rm *.o *.x > /dev/null
+
+ifort -c makeRTPfile.f90 -extend-source 132 -check bounds -O2 \
+      -I/home/motteler/shome/rtp/include
+
+ifort -o makeRTPfile90.x -extend-source 132 -check bounds -O2 makeRTPfile.o \
+   -L/home/motteler/shome/rtp/lib -lrtp \
+   -L/usr/ebuild/software/HDF/4.2.14-GCCcore-8.3.0/lib -ldf
+
+./makeRTPfile90.x fin=day_py4cats.atmX fout=junk90.ip.rtp
+
+/home/motteler/shome/rtp/bin/rtpdump -h -p junk90.ip.rtp
+

@@ -1,5 +1,5 @@
 #
-# RTP top level Makefile for rtpV201
+# RTP top level Makefile for rtpV201, f77
 #
 # this file sets some common parameters and then calls makefiles
 # in the src, test, and utils subdirectories
@@ -14,8 +14,20 @@
 # --------------
 
 # set HDFHOME to point to the local HDF installation
-HDFHOME = /asl/opt/hdf/4.2r4
+#HDFHOME = /asl/opt/hdf/4.2r4
 #HDFHOME = /asl/opt/lib_old
+
+################## more recent Jan 2016
+HDF_INSTALL1 = /usr/cluster/contrib/hdf4/4.2.11
+HDFLIB1   = -L$(HDF_INSTALL1)/lib -ldf -ljpeg -lz       ## -lmfhdf
+
+# more libs
+HDF_INSTALL2 = /usr/cluster/contrib/szip2/szip2.1
+HDF_INSTALL2 = /usr/ebuild/software/Szip/2.1.1-GCCcore-6.4.0
+HDFLIB2   = -L$(HDF_INSTALL2)/lib -lsz -L/usr/lib64/libsz.so.2
+
+HDFLIB = $(HDFLIB1) $(HDFLIB2)
+HDFHOME = $(HDFLIB)
 
 # --------------
 # RTP parameters
@@ -32,8 +44,10 @@ RTPHOME = ..
 # CFLAGS = -g -64
 # CFLAGS = -g
 CFLAGS = -O 
-CC = icc    # F77 = ifort "icc does not adds underscores to symbols"
+CC = icc       # F77 = ifort "icc does not adds underscores to symbols"
 #CC = cc       # F77 = /asl/opt/absoft/absoft10.0/bin/af77
+#CC = /usr/ebuild/software/intel-compilers/2023.2.1/compiler/2023.2.1/linux/bin/intel64/icc
+#CC = /usr/ebuild/software/intel-compilers/2021.2.0/compiler/2021.2.0/linux/bin/intel64/icc
 
 # ------------------------
 # Fortran compiler options
@@ -70,9 +84,15 @@ CC = icc    # F77 = ifort "icc does not adds underscores to symbols"
 # -----------
 # -us : puts trailing underscore
 F77 = /cm/shared/apps/intel/composer_xe/2015.3.187/bin/intel64/ifort
-F77 = /cm/shared/apps/intel/composer_xe/2015.5.223/bin/intel64/ifort
+F77 = ifort
 #FLAGS = -O3 -names uppercase -us
 FLAGS = -O -assume nounderscore
+
+# gfortran options
+#F90 = /usr/ebuild/software/GCCcore/11.2.0/bin/gfortran
+#FFLAGS = -O -fdec-structure
+
+########################################################################
 
 # pass the variables set above to the subdirectory makefiles
 #

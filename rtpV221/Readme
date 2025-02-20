@@ -1,0 +1,56 @@
+SLACK, "data_formats" channel, June 2024
+
+========================================
+This is copied from /asl/packages/rtp
+========================================
+
+There's a problem inherent in the basic C/Fortran RTP setup that if
+you change the "MAX" values in the headers, this can shift prof.rtime
+(a 64-bit value) from an even to an odd word boundary.  There's
+generally no reason to change those values, as they are maxes for the
+struct buffers, and don't determine field or file size.  They just
+need to be big enough to handle any common cases.  But if you do
+change them this can shift the start of subsequent data in the buffer.
+
+The usual fix for this sort of thing is simply to move all the 64-bit
+stuff to the first part of the struct, but there are good reasons for
+not doing that in RTP, mainly because we have field groups for
+observed and calculated radiances that are used to avoid writing
+fields we aren't using.  (Also, the field organization is intended to
+make things easier to read and understand.)
+
+So anyway, I updated rtpsize to check if a fill value is needed before
+p.rtime.  Further tests show that with a fill value, if needed, if
+rtpsize does not give any warnings, and if the Fortran tests are OK,
+then we don't really need the struct packing compiler options.  The
+Makefile is updated to reflect this, and I pushed the most recent
+version to /asl/packages/rtp.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+In addition to the tests in the repo, I also tested this with Sergio's
+demo F90 app.  I still need to update the documentation, and maybe add
+some notes about modifying the format, if only as a warning.
+
+The options for the RTP libs are now very vanilla.  For icc, just
+CFLAGS = -O2, and for ifort, FFLAGS = -extend-source 132 -check bounds
+-O2.
+
+The FFLAGS are all from Sergio, for his applications.  Probably the
+RTP libs will build with no options at all, which might be a good
+starting point for trying other compilers.
+
+Make sure you aren't setting things like compiler options in your environment, that is just asking for trouble.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I was able to build the RTP libs with gcc/gfort, with some help on
+compiler options from Sergio.  But I should probably keep the default
+install with the icc/ifort build, unless I hear otherwise.
+
+I've updated doc/rtpspec.tex (and pdf) to include the 4 new cloud
+fields, and added a section on modifications, and did a few other
+mostly minor edits.  All updates are in /asl/packages/rtp, with a
+symlink from rtpV221.
+
+While I'd recommend switching, /asl/packages/rtpV201 is still there
+and has not been modified in any way.
